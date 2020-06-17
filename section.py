@@ -1,16 +1,25 @@
 import csv
 import random
 
-leaders = 4
+"""
+---PARAMETERS---
+leaders: number of section leaders (or number of sections able to taught)
+limit: number of iterations to try and achieve 100% student coverage before increasing the maximum number of students per section
+offset: a constant used to determine the size of sections (probably don't need to change)
+availabilities: path to dataset
+"""
+leaders = 3
 limit = 50
 offset = 0
 availabilities = 'example1.csv'
 
+# TODO: allow for multiple sections at the same time
+# TODO: add days of the week
 def generate():
 	global offset
 	iteration = 0
-	sofar = 0
-	while sofar < 100:
+	best_score = 0
+	while best_score < 100:
 		if iteration == limit:
 			offset += 1
 			iteration = 0
@@ -33,9 +42,9 @@ def generate():
 			n_students -= 1
 			capacity = offset
 			if (n_students) % leaders == 0:
-				capacity += (n_students) // leaders
+				capacity += n_students // leaders
 			else:
-				capacity += ((n_students) // leaders) + 1
+				capacity += (n_students // leaders) + 1
 			### https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value	
 			students = {k: v for k, v in sorted(students.items(), key=lambda item: len(item[1]))}
 			# print(students)
@@ -82,9 +91,9 @@ def generate():
 			for t in times:				
 				total += len(times[t])
 			# TODO: account for load balancing in score
-			score = round(total / (n_students) * 100, 2)
-			if score > sofar:
-				sofar = score
+			score = round(total / n_students * 100, 2)
+			if score > best_score:
+				best_score = score
 				best_result = ''
 				sec_num = 1
 				for t in times:
@@ -93,7 +102,7 @@ def generate():
 						best_result += "\n"
 						sec_num += 1
 				best_score = score
-				if sofar == 100:
+				if best_score == 100:
 					print(best_result)
 					print(f"Score: {best_score}%")
 
