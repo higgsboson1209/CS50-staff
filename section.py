@@ -3,27 +3,29 @@ import random
 
 """
 ---PARAMETERS---
-leaders: number of section leaders (or number of sections able to taught)
-limit: number of iterations to try and achieve 100% student coverage before increasing the maximum number of students per section
-offset: a constant used to determine the size of sections (probably don't need to change)
+leaders: number of section leaders (or number of sections able to be taught)
+limit: max section size
+n_iterations: number of iterations per given section size to try and achieve 100% student coverage
 availabilities: path to dataset
 """
-leaders = 3
-limit = 50
-offset = 0
+
+leaders = 4
+limit = 30
+n_iterations = 50
 availabilities = 'example1.csv'
 
 # TODO: allow for multiple sections at the same time
 # TODO: add days of the week
 def generate():
-	global offset
+	offset = 0
 	iteration = 0
 	best_score = 0
+	capacity = 0
 	while best_score < 100:
-		if iteration == limit:
+		if iteration == n_iterations:
 			offset += 1
 			iteration = 0
-			if offset == 30:
+			if offset + capacity >= limit:
 				print(best_result)
 				print(f"Score: {best_score}%")
 				break
@@ -41,7 +43,7 @@ def generate():
 				n_students += 1
 			n_students -= 1
 			capacity = offset
-			if (n_students) % leaders == 0:
+			if n_students % leaders == 0:
 				capacity += n_students // leaders
 			else:
 				capacity += (n_students // leaders) + 1
