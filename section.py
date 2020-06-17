@@ -1,7 +1,7 @@
 import csv
 import random
 
-leaders = 3
+leaders = 4
 limit = 50
 offset = 0
 availabilities = 'example1.csv'
@@ -88,18 +88,14 @@ def generate():
 				best_result = ''
 				sec_num = 1
 				for t in times:
-					if sec_num == len(times):
-						best_result += f"Section #{sec_num} ({t}): {sorted(times[t])}"
-					else:
-						best_result += f"Section #{sec_num} ({t}): {sorted(times[t])}\n"
+					best_result += f"Section #{sec_num} ({t}): {sorted(times[t])}"
+					if sec_num != len(times):
+						best_result += "\n"
 						sec_num += 1
 				best_score = score
-			if sofar == 100:
-				sec_num = 1
-				for t in times:
-					print(f"Section #{sec_num} ({t}): {sorted(times[t])}")
-					sec_num += 1
-				print(f"Score: {score}%")
+				if sofar == 100:
+					print(best_result)
+					print(f"Score: {best_score}%")
 
 if __name__ == "__main__":
 	generate()
